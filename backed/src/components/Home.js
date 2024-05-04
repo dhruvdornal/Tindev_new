@@ -143,7 +143,7 @@ const fetchProfilesBySkills = async(skills)=>{ // yeh user ke skills he hisab se
      fetchProfilesBySkills(user.skills).then(profiles => {
       console.log('Fetch request completed'); // yeh error aaya toh usko debug krne ke liye console log kiya phir pta chalta h kaha error aara hai 
       console.log('Sent skills:', user.skills);
-      console.log('Received profiles:', profiles);
+      console.log('Got the profiles:', profiles);
       setMatchingProfiles(profiles);
       console.log("Updated state with profiles: ", profiles);
      }).catch(error=>{
