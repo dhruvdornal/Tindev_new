@@ -21,17 +21,19 @@ const User = mongoose.model("users");
 app.post('/register', async(req, res) => { 
     /* MONGO CODE */
 const username = req.body.username;
-const skills = req.body.skills;
+const techstacks = req.body.techstacks;
 const desc = req.body.desc;
 const password = req.body.password; 
 const hashPass = await bcrypt.hash(password,8);
 const email = req.body.email;
 const github = req.body.github;
+const languages = req.body.languages;
+const frameworks = req.body.frameworks;
 
 if(password.length < 8){ 
     return res.status(400).send({ status: 'error', message: 'Password must be atleast 8 characters long' });
 }
-if(!username || !skills || !desc || !password || !email || !github){
+if(!username || !techstacks || !desc || !password || !email || !github || !languages || !frameworks){
     return res.status(400).send({ status: 'error', message: 'Please input all fields' });
 }
     try{
@@ -40,7 +42,7 @@ if(!username || !skills || !desc || !password || !email || !github){
             return res.status(400).send({ status: 'error', message: 'Oops, username taken' });
         }
         await User.create({
-            username,password:hashPass,skills,desc,email,github //creating user in mongo
+            username,password:hashPass,techstacks,languages,frameworks,desc,email,github //creating user in mongo
         })
         res.send({status:"ok"})
     }catch(error){
@@ -74,7 +76,7 @@ app.post('/login', async (req, res) => {
         console.log(user);
         const userDetails = {
           username: user.username,
-          skills: user.skills,
+          techstacks: user.techstacks,
           desc: user.desc,
           github: user.github,
           email: user.email
@@ -100,7 +102,7 @@ app.post('/login', async (req, res) => {
 //         res.json({
 //             username: user.username,
 //             email: user.email,
-//             skills: user.skills,
+//             techstacks: user.techstacks,
 //             desc: user.desc,
 //             github: user.github
 //         })
@@ -115,15 +117,15 @@ app.post('/login', async (req, res) => {
 
 // TO DISPLAY ALL USERS LIST
   // app.get('/users', async(req, res) => {
-  //   // const skill = req.params.skill.split(',');
+  //   // const techstack = req.params.techstack.split(',');
   //   // console.log('Request query:', req.query); 
-  //   const skills = req.query.skills ? req.query.skills.split(',') : [];
-  //   console.log('Recieved skills:', skills);
+  //   const techstacks = req.query.techstacks ? req.query.techstacks.split(',') : [];
+  //   console.log('Recieved techstacks:', techstacks);
   //   try{
 
-  //     if (skills.length > 0) {
-  //       console.log('Executing query with skills:', skills);
-  //       const users = await User.find({ skills: { $in: skills } });
+  //     if (techstacks.length > 0) {
+  //       console.log('Executing query with techstacks:', techstacks);
+  //       const users = await User.find({ techstacks: { $in: techstacks } });
   //       //console.log('Query result:', users);
   //       res.json(users);
   //     } else {
@@ -136,16 +138,16 @@ app.post('/login', async (req, res) => {
   // });
 
   app.get('/users', async(req, res) => {
-    const skills = req.query.skills ? req.query.skills.split(',') : [];
-    console.log('Recieved skills:', skills);
+    const techstacks = req.query.techstacks ? req.query.techstacks.split(',') : [];
+    console.log('Recieved techstacks:', techstacks);
     try{
-      if (skills.length > 0) {
-        console.log('Executing query with skills:', skills);
-        const users = await User.find({ skills: { $in: skills } });
+      if (techstacks.length > 0) {
+        console.log('Executing query with techstacks:', techstacks);
+        const users = await User.find({ techstacks: { $in: techstacks } });
         console.log('Query result:', users);
         res.json(users);
       } else {
-        // If no skills are provided, return all users
+        // If no techstacks are provided, return all users
         const users = await User.find({});
         res.json(users);
       }
@@ -155,10 +157,10 @@ app.post('/login', async (req, res) => {
     }
 });
 
-  // app.get('/users/:skill', async(req, res) => {
-  //   const skill = req.params.skill;
+  // app.get('/users/:techstack', async(req, res) => {
+  //   const techstack = req.params.techstack;
   //   try{
-  //       const users = await User.find({skills: {$in: [skill]}});
+  //       const users = await User.find({techstacks: {$in: [techstack]}});
   //       console.log('Query result:', users);
   //       res.json(users);
   //   }catch(error){
@@ -167,11 +169,11 @@ app.post('/login', async (req, res) => {
   //   }  
   // });
 
-  app.get('/users/:skill?', async (req, res) => {
+  app.get('/users/:techstack?', async (req, res) => {
     try {
       let query = {};
-      if (req.params.skill) {
-        query = { skills: req.params.skill };
+      if (req.params.techstack) {
+        query = { techstacks: req.params.techstack };
       }
       const users = await User.find(query);
       console.log('Query result:', users);

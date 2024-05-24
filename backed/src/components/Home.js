@@ -72,19 +72,19 @@ const styles = {
     backgroundColor: 'transparent',
     color: '#02899C',
   },
-  skills: {
+  techstacks: {
     backgroundColor: 'radial-gradient(circle at 10% 20%, rgb(254, 255, 165) 0%, rgb(255, 232, 182) 90%)',
     textAlign: 'left',
     padding: '15px',
     marginTop: '30px',
   },
-  skillsList: {
+  techstacksList: {
     listStyleType: 'none',
     margin: '0',
     padding: '0', 
     color:"#222"
   },
-  skillsItem: {
+  techstacksItem: {
     border: '1px solid #2D2747',
     borderRadius: '6px',
     display: 'inline-block',
@@ -121,11 +121,12 @@ const randomNumber = Math.floor(Math.random() * 10);
 //const imgURL = `https://bootdey.com/img/Content/avatar/avatar${randomNumber}.png`;
 const imgURL = `https://randomuser.me/api/portraits/med/lego/${randomNumber}.jpg`;
 
-const fetchProfilesBySkills = async(skills)=>{ // yeh user ke skills he hisab se profile dikhane ke liye
+
+const fetchProfilesBytechstacks = async(techstacks)=>{ // yeh user ke techstacks he hisab se profile dikhane ke liye
   try{
-    const skillsString = Array.isArray(user.skills) ? user.skills.join(',') : 'No skills listed';
-    //const response = await fetch(`http://localhost:5000/users/${skillsString}`); 
-    const response = await fetch(`http://localhost:5000/users?skills=${encodeURIComponent(skillsString)}`);
+    const techstacksString = Array.isArray(user.techstacks) ? user.techstacks.join(',') : 'No techstacks listed';
+    //const response = await fetch(`http://localhost:5000/users/${techstacksString}`); 
+    const response = await fetch(`http://localhost:5000/users?techstacks=${encodeURIComponent(techstacksString)}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -139,10 +140,10 @@ const fetchProfilesBySkills = async(skills)=>{ // yeh user ke skills he hisab se
  }
 
  useEffect(() => {
-  if (user && user.skills) {
-     fetchProfilesBySkills(user.skills).then(profiles => {
+  if (user && user.techstacks) {
+     fetchProfilesBytechstacks(user.techstacks).then(profiles => {
       console.log('Fetch request completed'); // yeh error aaya toh usko debug krne ke liye console log kiya phir pta chalta h kaha error aara hai 
-      console.log('Sent skills:', user.skills);
+      console.log('Sent techstacks:', user.techstacks);
       console.log('Got the profiles:', profiles);
       setMatchingProfiles(profiles);
       console.log("Updated state with profiles: ", profiles);
@@ -188,7 +189,7 @@ const fetchProfilesBySkills = async(skills)=>{ // yeh user ke skills he hisab se
                     backgroundSize: "cover",
                     backgroundRepeat:"no-repeat"
      }}>
-        {/* Render profiles that match the user's skills */}
+        {/* Render profiles that match the user's techstacks */}
         {matchingProfiles.map(profile => (
           <div key={profile._id} style={cardStyle}>
           <div style={styles.cardContainer}>
@@ -200,11 +201,29 @@ const fetchProfilesBySkills = async(skills)=>{ // yeh user ke skills he hisab se
      <Link target='_blank' to={user.github}><button className="btnn"><span><i class="fa-brands fa-github fa-2x fa-fw" aria-hidden="true"></i></span>&nbsp; Github</button></Link>
         
       
-        <div style={styles.skills}>
-          <h6 style={styles.h6}>Skills</h6>
-          <ul style={styles.skillsList}>
-          {profile.skills.toString().split(',').map((skill, index) => (
-        <li key={index} style={styles.skillsItem}>{skill.trim()}</li>
+        <div style={styles.techstacks}>
+          <h6 style={styles.h6}>Techstack</h6>
+          <ul style={styles.techstacksList}>
+          {profile.techstacks.toString().split(',').map((techstack, index) => (
+        <li key={index} style={styles.techstacksItem}>{techstack.trim()}</li>
+      ))}
+            </ul>
+        </div>
+
+        <div style={styles.techstacks} className='my-0'>
+          <h6 style={styles.h6}>Languaes</h6>
+          <ul style={styles.techstacksList}>
+          {profile.languages.toString().split(',').map((language, index) => (
+        <li key={index} style={styles.techstacksItem}>{language.trim()}</li>
+      ))}
+            </ul>
+        </div>
+
+        <div style={styles.techstacks} className='my-0'>
+          <h6 style={styles.h6}>Frameworks</h6>
+          <ul style={styles.techstacksList}>
+          {profile.frameworks.toString().split(',').map((framework, index) => (
+        <li key={index} style={styles.techstacksItem}>{framework.trim()}</li>
       ))}
             </ul>
         </div>

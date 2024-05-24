@@ -11,7 +11,9 @@ const Auth = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState([])
     const [password, setPassword] = useState([])
-    const [skills, setskills] = useState([])
+    const [techstacks, settechstacks] = useState([])
+    const [languages, setLanguages] = useState([])
+    const [frameworks, setFrameworks] = useState([])
     const [desc, setdesc] = useState([])
     const [email, setEmail] = useState([])
     const [github, setGithub] = useState([])
@@ -24,7 +26,7 @@ const Auth = () => {
     
     const rego = async () =>{
       /* MONGO DB code */
-      if(!username || !skills || !desc || !password){
+      if(!username || !techstacks || !desc || !password || !languages || !frameworks){
         toast.error("Please input all fields;",{
           position: "top-center",
           autoClose: 3000,
@@ -56,7 +58,7 @@ const Auth = () => {
           "Content-Type":"application/json"
         },
         body:JSON.stringify({
-          username,password,skills,desc,email,github
+          username,password,techstacks,languages,frameworks,desc,email,github
         }),
       }).then((res)=>res.json())
         .then((data)=>{
@@ -180,11 +182,22 @@ return(
                       <i className="input-icon uil uil-user"></i> 
                       </div>  
                       <div className="form-group mt-2">
-                        <input type="email" name="logskills" className="form-style" required="true" placeholder="Skills" id="logskills" autoComplete="off" onChange={(e)=>{setskills(e.target.value)}}/>
+                        <input type="email" name="logtechstacks" className="form-style" required="true" placeholder="Techstack" id="logtechstacks" autoComplete="off" onChange={(e)=>{settechstacks(e.target.value)}}/>
+                        <i className="input-icon uil uil-at"></i>
+                      </div>
+
+                      <div className="form-group mt-2">
+                        <input type="email" name="logtechstacks" className="form-style" required="true" placeholder="Languages Known" id="logtechstacks" autoComplete="off" onChange={(e)=>{setLanguages(e.target.value)}}/>
                         <i className="input-icon uil uil-at"></i>
                       </div>  
+
                       <div className="form-group mt-2">
-                        <input type="email" name="logdesc" className="form-style" required="true" placeholder="Description" id="logdesc" autoComplete="off" onChange={(e)=>{setdesc(e.target.value)}}/>
+                        <input type="email" name="logtechstacks" className="form-style" required="true" placeholder="Frameworks Known" id="logtechstacks" autoComplete="off" onChange={(e)=>{setFrameworks(e.target.value)}}/>
+                        <i className="input-icon uil uil-at"></i>
+                      </div>
+                      
+                      <div className="form-group mt-2">
+                        <input type="email" name="logdesc" className="form-style" required="true" placeholder="Brief Description" id="logdesc" autoComplete="off" onChange={(e)=>{setdesc(e.target.value)}}/>
                         <i className="input-icon uil uil-at"></i>
                       </div>
                       <div className="form-group mt-2">

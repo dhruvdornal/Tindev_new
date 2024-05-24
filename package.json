@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "expo": "^50.0.14"
+    "expo": "^50.0.14",
+    "react-scripts": "^5.0.1"
   }
 }

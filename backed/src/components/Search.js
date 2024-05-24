@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import {Link} from 'react-router-dom'
 function Search() {
-  const [skill, setSkill] = useState('');
+  const [techstack, settechstack] = useState('');
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [filterOption, setFilterOption] = useState('');
@@ -71,19 +71,19 @@ function Search() {
       backgroundColor: 'transparent',
       color: '#02899C',
     },
-    skills: {
+    techstacks: {
       background: 'linear-gradient(179.1deg, rgb(247, 238, 238) -1.9%, rgb(247, 202, 201) 44.9%, rgb(145, 168, 208) 96.1%)',
       textAlign: 'left',
       padding: '25px',
       marginTop: '30px',
       borderRadius:"20px"
     },
-    skillsList: { 
+    techstacksList: { 
       listStyleType: 'none',
       margin: '0',
       padding: '0',
     },
-    skillsItem: {
+    techstacksItem: {
       border: '1px solid #2D2747',
       borderRadius: '5px',
       background:"radial-gradient(circle at 10% 20%, rgb(215, 223, 252) 0%, rgb(255, 255, 255) 0%, rgb(215, 223, 252) 84%)",
@@ -119,9 +119,9 @@ function Search() {
 
   // const handleSubmit = event => {
   //  event.preventDefault();
-  //  axios.get(`http://localhost:5000/users/${skill}`)
+  //  axios.get(`http://localhost:5000/users/${techstack}`)
   //    .then((response) => {
-  //     const filtered = response.data.filter(user => user.skills);
+  //     const filtered = response.data.filter(user => user.techstacks);
   //     setFilteredUsers(filtered);
   //     // setFilteredUsers(response.data);
   //    })
@@ -132,14 +132,14 @@ function Search() {
 
   const handleSubmit = event => {
     event.preventDefault();
-    if (skill.trim() === '') {
+    if (techstack.trim() === '') {
       // If search bar is empty, fetch all users
       fetchUsers();
     } else {
-      // If search bar has a skill, filter users based on that skill
-      axios.get(`http://localhost:5000/users/${skill}`)
+      // If search bar has a techstack, filter users based on that techstack
+      axios.get(`http://localhost:5000/users/${techstack}`)
         .then((response) => {
-          const filtered = response.data.filter(user => user.skills);
+          const filtered = response.data.filter(user => user.techstacks);
           console.log("filtered users: ",filtered);
           setFilteredUsers(filtered);
         })
@@ -155,21 +155,21 @@ function Search() {
   // };
 
   // useEffect(() => {
-  //   // Filter users based on searchSkill and filterOption
-  //   if (skill !== '') {
-  //     const filtered = users.filter(user => user.skills.includes(skill));
+  //   // Filter users based on searchtechstack and filterOption
+  //   if (techstack !== '') {
+  //     const filtered = users.filter(user => user.techstacks.includes(techstack));
   //     setFilteredUsers(filtered);
   //   } else if (filterOption !== '') {
-  //     const filtered = users.filter(user => user.skills.includes(filterOption));
+  //     const filtered = users.filter(user => user.techstacks.includes(filterOption));
   //     setFilteredUsers(filtered);
   //   } else {
   //     setFilteredUsers(users);
   //   }
-  // }, [skill, filterOption, users]);
+  // }, [techstack, filterOption, users]);
 
 // display all users if not searched any, then filtering according to the keyword
-const displayUsers = skill ? filteredUsers : users; 
-// const displayUsers = (skill || filterOption) ? filteredUsers : users;
+const displayUsers = techstack ? filteredUsers : users; 
+// const displayUsers = (techstack || filterOption) ? filteredUsers : users;
 // bg image
 const bgImg = "https://images.pexels.com/photos/113850/pexels-photo-113850.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
 // random image fetching from the API
@@ -189,8 +189,8 @@ const imgURL = `https://randomuser.me/api/portraits/med/lego/${randomNumber}.jpg
         class="inputt"
           type="text"
           placeholder='Enter prompt'
-          value={skill}
-          onChange={event => setSkill(event.target.value)}
+          value={techstack}
+          onChange={event => settechstack(event.target.value)}
           // style={{
           //   width: "300px",
           //   padding: "10px",
@@ -246,15 +246,33 @@ const imgURL = `https://randomuser.me/api/portraits/med/lego/${randomNumber}.jpg
      {/* <Link target="_blank" to={`mailto:${user.email}`}><button style={{marginRight:"10px"}} class="circular-btn"><i class="fa-brands fa-google fa-2x"></i></button></Link> */}
 		 {/* <Link target="_blank" to={user.github}><button class="circular-btn"><i class="fab fa-github"></i></button></Link> */}
     
-      <div style={styles.skills}>
-        <h6 style={styles.h6}>Skills</h6>
-        <ul style={styles.skillsList}>
-        {user.skills.toString().split(',').map((skill, index) => (
-      <li key={index} style={styles.skillsItem}>{skill.trim()}</li>
+      <div style={styles.techstacks}>
+        <h6 style={styles.h6}>techstacks</h6>
+        <ul style={styles.techstacksList}>
+        {user.techstacks && user.techstacks.toString().split(',').map((techstack, index) => (
+      <li key={index} style={styles.techstacksItem}>{techstack.trim()}</li>
     ))}
           </ul>
       </div>
       
+      <div style={styles.techstacks}>
+        <h6 style={styles.h6}>Frameworks</h6>
+        <ul style={styles.techstacksList}>
+        {user.frameworks && user.frameworks.toString().split(',').map((framework, index) => (
+      <li key={index} style={styles.techstacksItem}>{framework.trim()}</li>
+    ))}
+          </ul>
+      </div>
+
+      <div style={styles.techstacks}>
+        <h6 style={styles.h6}>Languages</h6>
+        <ul style={styles.techstacksList}>
+        {user.languages && user.languages.toString().split(',').map((language, index) => (
+      <li key={index} style={styles.techstacksItem}>{language.trim()}</li>
+    ))}
+          </ul>
+      </div>
+
     </div>
       </div>
       ))}

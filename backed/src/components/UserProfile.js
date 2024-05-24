@@ -114,19 +114,19 @@ const UserProfile = () => {
         darkColor: {
           color: '#20247b'
         },
-        // skills style
-        skills: {
+        // techstacks style
+        techstacks: {
             backgroundColor: '#1F1A36',
             textAlign: 'left',
             padding: '15px',
             marginTop: '30px',
           },
-          skillsList: {
+          techstacksList: {
             listStyleType: 'none',
             margin: '0',
             padding: '0',
           },
-          skillsItem: {
+          techstacksItem: {
             border: '1px solid #2D2747',
             borderRadius: '2px',
             display: 'inline-block',
@@ -162,10 +162,10 @@ const UserProfile = () => {
                         <h3 class="dark-color" style={styles.aboutTextH3}>{user.username}</h3>
                         <h6 class="theme-color lead" style={styles.aboutTextH6}>{user.desc}</h6>
                         {/* <p style={styles.aboutTextP}>I <mark style={styles.mark}>design and develop</mark> services for customers of all sizes, specializing in creating stylish, modern websites, web services and online stores. My passion is to design digital user experiences through the bold interface and meaningful interactions.</p> */}
-                        <h6 style={{fontWeight:"bold"}}>Skills</h6>
-                                                <ul className="my-2" style={styles.skillsList}>
-                                                {user.skills.toString().split(',').map((skill, index) => (
-                                            <li key={index} style={styles.skillsItem}>{skill.trim()}</li>
+                        <h6 style={{fontWeight:"bold"}}>Techstacks</h6>
+                                                <ul className="my-2" style={styles.techstacksList}>
+                                                {user.techstacks.toString().split(',').map((techstack, index) => (
+                                            <li key={index} style={styles.techstacksItem}>{techstack.trim()}</li>
                                          ))}
                                                  </ul>
 
@@ -196,7 +196,7 @@ const UserProfile = () => {
                 </div>
                 <div class="col-lg-6">
                     <div class="about-avatar" style={styles.aboutAvatar}>
-                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" title="" alt="" style={styles.img}/>
+                        <img src="https://static1.thegamerimages.com/wordpress/wp-content/uploads/2021/08/Ghost-of-Tsushima-Yuna-Cropped.jpg" title="" alt="" style={styles.img}/>
                     </div>
                 </div>
             </div>
