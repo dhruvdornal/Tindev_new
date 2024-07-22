@@ -92,7 +92,8 @@ const Auth = () => {
          }
         })
       }
- 
+
+    
       /* LOGIN CODE */
       const login = () => {
         /* MONGO DB code */

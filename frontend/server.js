@@ -1,9 +1,13 @@
 const express = require("express");
 const cors = require("cors");
+const multer = require('multer');
 const app = express();
 const mongoose = require("mongoose");
+mongoose.set('debug', true);
 const bcrypt = require("bcryptjs");
 //const no = require("nodemon")
+const fs = require('fs');
+const path = require('path');
 app.use(express.json());
 app.use(cors());
 
@@ -14,12 +18,20 @@ mongoose.connect(mongoUrl,{
     console.log("connected");
 }).catch((e)=>console.log(e));
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage: storage });
 require("./userDetails")
 const User = mongoose.model("users");
 
 /* SIGNUP */
 app.post('/register', async(req, res) => { 
-    /* MONGO CODE */
 const username = req.body.username;
 const techstacks = req.body.techstacks;
 const desc = req.body.desc;
@@ -50,23 +62,6 @@ if(!username || !techstacks || !desc || !password || !email || !github || !langu
     }
 })
 
-/* LOGIN */
-// app.post('/login', async(req, res) => {  
-// const username = req.body.username;                 
-// const password = req.body.password; 
-
-// try{
-//     const use = await User.findOne({username});
-//     if(use && bcrypt.compareSync(password,use.password)){
-//         res.send({status:"ok",username:use.username})
-//     }else{
-//         res.send({status:"invalid creds"})
-//     }
-// }catch(error){
-//     res.send({status:"error",message:error.message})
-// }
-// })
-
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -91,30 +86,6 @@ app.post('/login', async (req, res) => {
     }
   });
 
-
-// app.post('/userprof',async(req,res)=>{
-//     try{
-//         const userID = req.userID;
-//         const user = await User.findById(userID);
-//         if(!user){
-//             return res.status(404).json({ message: 'User not found' });
-//         }
-//         res.json({
-//             username: user.username,
-//             email: user.email,
-//             techstacks: user.techstacks,
-//             desc: user.desc,
-//             github: user.github
-//         })
-//     }catch(error){
-//         console.error('Error fetching user profile:', error);
-//         res.status(500).json({ message: 'Internal server error' });
-//     }
-// })
-
-
-
-
 // TO DISPLAY ALL USERS LIST
   // app.get('/users', async(req, res) => {
   //   // const techstack = req.params.techstack.split(',');
@@ -137,25 +108,25 @@ app.post('/login', async (req, res) => {
   //   }
   // });
 
-  app.get('/users', async(req, res) => {
-    const techstacks = req.query.techstacks ? req.query.techstacks.split(',') : [];
-    console.log('Recieved techstacks:', techstacks);
-    try{
-      if (techstacks.length > 0) {
-        console.log('Executing query with techstacks:', techstacks);
-        const users = await User.find({ techstacks: { $in: techstacks } });
-        console.log('Query result:', users);
-        res.json(users);
-      } else {
-        // If no techstacks are provided, return all users
-        const users = await User.find({});
-        res.json(users);
-      }
-    }catch(error){
-        console.error("Error executing query: ",error);
-        res.status(500).json({ message: error.message });
-    }
-});
+//   app.get('/users', async(req, res) => {
+//     const techstacks = req.query.techstacks ? req.query.techstacks.split(',') : [];
+//     console.log('Recieved techstacks:', techstacks);
+//     try{
+//       if (techstacks.length > 0) {
+//         console.log('Executing query with techstacks:', techstacks);
+//         const users = await User.find({ techstacks: { $in: techstacks } });
+//         console.log('Query result:', users);
+//         res.json(users);
+//       } else {
+//         // If no techstacks are provided, return all users
+//         const users = await User.find({});
+//         res.json(users);
+//       }
+//     }catch(error){
+//         console.error("Error executing query: ",error);
+//         res.status(500).json({ message: error.message });
+//     }
+// });
 
   // app.get('/users/:techstack', async(req, res) => {
   //   const techstack = req.params.techstack;
@@ -169,15 +140,66 @@ app.post('/login', async (req, res) => {
   //   }  
   // });
 
+  // app.get('/users/:techstack?', async (req, res) => {
+  //   try {
+  //     let query = {};
+  //     if (req.params.techstack) {
+  //       query = { techstacks: req.params.techstack };
+  //     }
+  //     console.log('Query:', query); // Debugging log
+  //     const users = await User.find(query);
+  //     console.log('Query result:', users);
+  //     res.json(users);
+  //   } catch (error) {
+  //     console.error("Error executing query: ", error);
+  //     res.status(500).json({ message: error.message });
+  //   }
+  // });
+
   app.get('/users/:techstack?', async (req, res) => {
     try {
       let query = {};
-      if (req.params.techstack) {
-        query = { techstacks: req.params.techstack };
-      }
-      const users = await User.find(query);
-      console.log('Query result:', users);
-      res.json(users);
+      const techStackRegex = new RegExp(req.params.techstack, 'i');
+      const languagesRegex = new RegExp(req.params.techstack, 'i');
+      const frameworksRegex = new RegExp(req.params.techstack, 'i');
+        // Adjusted query to match your MongoDB aggregation pipeline structure
+        const agg = [
+          {
+            '$search': {
+              'compound': {
+                'should': [
+                  {
+                    'text': {
+                      'query': techStackRegex,
+                      'path': 'techstacks'
+                    }
+                  },
+                  {
+                    'text': {
+                      'query': languagesRegex,
+                      'path': 'languages'
+                    }
+                  },
+                  {
+                    'text': {
+                      'query': frameworksRegex,
+                      'path': 'frameworks'
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ];
+  
+        // Assuming you have set up your MongoDB client (client) correctly
+  
+        const coll = client.db('test').collection('users');
+        const cursor = coll.aggregate(agg);
+        const users = await cursor.toArray();
+  
+        console.log('Query result:', users);
+        res.json(users);
     } catch (error) {
       console.error("Error executing query: ", error);
       res.status(500).json({ message: error.message });
@@ -187,8 +209,9 @@ app.post('/login', async (req, res) => {
 
   app.get('/allusers', async (req, res) => {
     try {
-      const users = await User.find({});
-      //console.log('Fetched all users:', users);
+      // const users = await User.find({});
+      const users = await User.f
+      console.log('Fetched all users:', users);
       res.json(users);
     } catch (error) {
       console.error(error);
@@ -199,3 +222,29 @@ app.post('/login', async (req, res) => {
 app.listen(5000,()=>{
     console.log("listening on 5000");
 })
+
+
+// import { MongoClient } from 'mongodb';
+
+
+
+// const agg = [
+//   {
+//     '$search': {
+//       'text': {
+//         'query': 'nodejs', 
+//         'path': [
+//           'techstacks', 'languages', 'frameworks'
+//         ]
+//       }
+//     }
+//   }
+// ];
+
+// const client = await MongoClient.connect(
+//   ''
+// );
+// const coll = client.db('test').collection('users');
+// const cursor = coll.aggregate(agg);
+// const result = await cursor.toArray();
+// await client.close();

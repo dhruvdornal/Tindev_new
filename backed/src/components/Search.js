@@ -6,7 +6,7 @@ function Search() {
   const [techstack, settechstack] = useState('');
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const [filterOption, setFilterOption] = useState('');
+  //const [filterOption, setFilterOption] = useState('');
 
   const fetchUsers = async () =>{
     try{
@@ -137,15 +137,25 @@ function Search() {
       fetchUsers();
     } else {
       // If search bar has a techstack, filter users based on that techstack
-      axios.get(`http://localhost:5000/users/${techstack}`)
-        .then((response) => {
-          const filtered = response.data.filter(user => user.techstacks);
-          console.log("filtered users: ",filtered);
-          setFilteredUsers(filtered);
-        })
-        .catch((error) => {
-          console.error('Error fetching users: ', error);
-        });
+      // axios.get(`http://localhost:5000/users/${techstack}`)
+      //   .then((response) => {
+      //     const filtered = response.data.filter(user => user.techstacks);
+      //     console.log("filtered users: ",filtered);
+      //     setFilteredUsers(filtered);
+      //   })
+      //   .catch((error) => {
+      //     console.error('Error fetching users: ', error);
+      //   });
+      const techStackQuery = encodeURIComponent(techstack.trim().toLocaleUpperCase());
+      axios.get(`http://localhost:5000/users/${techStackQuery}`)
+      .then((response) => {
+        const filtered = response.data;
+        console.log("Filtered users: ", filtered);
+        setFilteredUsers(filtered);
+      })
+      .catch((error) => {
+        console.error('Error fetching users: ', error);
+      });
     }
   };
 
@@ -171,6 +181,7 @@ function Search() {
 const displayUsers = techstack ? filteredUsers : users; 
 // const displayUsers = (techstack || filterOption) ? filteredUsers : users;
 // bg image
+// eslint-disable-next-line
 const bgImg = "https://images.pexels.com/photos/113850/pexels-photo-113850.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
 // random image fetching from the API
 const randomNumber = Math.floor(Math.random() * 8);
@@ -197,7 +208,6 @@ const imgURL = `https://randomuser.me/api/portraits/med/lego/${randomNumber}.jpg
           //   border: "none",
           //   borderRadius: "20px",
           //   boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-            
           // }}
         />
         <span class="iconn"> 
@@ -217,8 +227,6 @@ const imgURL = `https://randomuser.me/api/portraits/med/lego/${randomNumber}.jpg
             position:"absolute",
             top: "0",
             right: "0",
-
-            
           }}    
         >
           Search

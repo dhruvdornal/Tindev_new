@@ -8,7 +8,7 @@ const userDetailSchema = new mongoose.Schema({
     email:String,
     github:String,
     languages:[String],
-    frameworks:String
+    frameworks:String,
 },{ 
     collection:"users"
 });
