@@ -196,7 +196,7 @@ const UserProfile = () => {
                 </div>
                 <div class="col-lg-6">
                     <div class="about-avatar" style={styles.aboutAvatar}>
-                        <img src="https://static1.thegamerimages.com/wordpress/wp-content/uploads/2021/08/Ghost-of-Tsushima-Yuna-Cropped.jpg" title="" alt="" style={styles.img}/>
+                        <img src="https://bootdey.com/img/Content/avatar/avatar8.png" title="" alt="" style={styles.img}/>
                     </div>
                 </div>
             </div>
